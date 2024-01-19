@@ -7,6 +7,8 @@ import com.mehdi.springboot_clinic.repository.UserRepository;
 import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -23,10 +25,17 @@ public class UserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
-
+    @Autowired
     public UserService(UserRepository userRepository, ModelMapper modelMapper) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
+
+        modelMapper.addMappings(new PropertyMap<User, UserDTO>() {
+            @Override
+            protected void configure() {
+                map().setId(source.getId());
+            }
+        });
     }
 
     public List<UserDTO> get(String keyword, Principal principal) {

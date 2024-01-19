@@ -9,10 +9,14 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<User,Long>, JpaSpecificationExecutor<User> {
+public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
 
     Optional<User> findUserByEmail(String email);
-    List<User> findAllByEnabled(Boolean enabled);
 
     User findByEmail(String email);
+
+    List<User> findAllByEnabled(Boolean enabled);
+
+    Optional<User> findUserById(long id);
 }
+

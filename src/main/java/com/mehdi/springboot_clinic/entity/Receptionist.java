@@ -1,22 +1,21 @@
 package com.mehdi.springboot_clinic.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
-import java.util.List;
 import java.util.Objects;
 
-@Table(name = "client", uniqueConstraints = {@UniqueConstraint(columnNames = {"email"})})
+@Table(name = "receptionist", uniqueConstraints = {@UniqueConstraint(columnNames = {"email"})})
 @Entity
 @Getter
 @Setter
 @ToString
 @RequiredArgsConstructor
-public class Client {
+public class Receptionist {
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     @Id
@@ -36,8 +35,8 @@ public class Client {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "occupation")
-    private String occupation;
+    @Column(name = "enabled")
+    private boolean enabled = true;
 
     @Column(name = "address")
     private String address;
@@ -54,49 +53,22 @@ public class Client {
     @Column(name = "about")
     private String about;
 
-    @Column(name = "enabled")
-    private boolean enabled = true;
-
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
 
-    @OneToMany
-    @ToString.Exclude
+    @ManyToOne
+    @JoinColumn(name = "shop_id")
     @LazyCollection(LazyCollectionOption.FALSE)
-    @JsonManagedReference
-    private List<Pet> pets;
-
-    @OneToMany
-    @ToString.Exclude
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @JsonManagedReference
-    private List<Bill> bills;
-
-    @OneToMany
-    @ToString.Exclude
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @JsonManagedReference
-    private List<Appointment> appointments;
-
-    @OneToMany
-    @ToString.Exclude
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @JsonManagedReference
-    private List<Feedback> feedbacks;
-
-    @OneToMany
-    @ToString.Exclude
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @JsonManagedReference
-    private List<Transaction> transactions;
+    @JsonBackReference
+    private Shop shop;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Client client = (Client) o;
-        return id != null && Objects.equals(id, client.id);
+        Receptionist that = (Receptionist) o;
+        return id != null && Objects.equals(id, that.id);
     }
 
     @Override
@@ -108,4 +80,3 @@ public class Client {
         return this.id;
     }
 }
-
